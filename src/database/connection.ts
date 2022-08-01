@@ -7,7 +7,12 @@ const connect = async () => {
   try {
     const dbUri = config.get('database.url') as string;
     await mongoose
-      .connect(dbUri)
+      .connect(dbUri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+      })
       .then(() => logger.info('Database connection successfull'));
   } catch (error) {
     logger.error('error connecting to database', error);

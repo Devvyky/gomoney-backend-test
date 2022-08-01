@@ -10,6 +10,10 @@ require('dotenv').config();
 
 import logger from './logger';
 import connect from './database/connection';
+import userRouter from './routes/userRouter';
+import teamRouter from './routes/teamRouter';
+import { errorHandler } from './middlewares/errorHandler';
+import AppError from './utils/appError';
 
 const app: Application = express();
 
@@ -42,6 +46,10 @@ app.use(
   })
 );
 
+// app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/team', teamRouter);
+
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello world!');
 });
@@ -52,5 +60,11 @@ app.listen(port, () => {
   logger.info(`Server running on port ${port}!`);
   connect();
 });
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+app.use(errorHandler);
 
 module.exports = app;
