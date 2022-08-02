@@ -4,31 +4,30 @@ import { clone } from 'lodash';
 import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
 import { signToken } from '../../utils/signToken';
-import { Team } from '../interfaces';
-import { create, findOne, update } from '../services/fixturesService';
+import { Fixture } from '../interfaces';
+import { createFixture } from '../services/fixturesService';
 
-export const createTeam = catchAsync(
+export const createFixtures = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { name, shortName, email }: Team = req.body;
+      const { home, away }: Fixture = req.body;
       const user = clone(req.user);
       const payload = {
-        name,
-        shortName,
-        email,
+        home,
+        away,
         createdBy: user?.id,
-      } as Team;
+      } as Fixture;
 
-      const data = await create(payload);
+      const data = await createFixture(payload);
 
       res.status(201).json({
-        message: 'Team created successfully',
+        message: 'Fixtures created successfully',
         status: 'success',
         data,
       });
     } catch (error: any) {
       logger.error(
-        `Error occurred while creating team: ${JSON.stringify(error)}`
+        `Error occurred while creating fixtures: ${JSON.stringify(error)}`
       );
       res.status(error.statusCode || 500).json({
         status: error.status || 'error',
@@ -38,54 +37,54 @@ export const createTeam = catchAsync(
   }
 );
 
-export const findTeamById = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { id } = req.params;
+// export const findTeamById = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     try {
+//       const { id } = req.params;
 
-      const data = await findOne(id);
+//       const data = await findOne(id);
 
-      res.status(200).json({
-        message: 'Team fetched successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while fetching team: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
-  }
-);
+//       res.status(200).json({
+//         message: 'Team fetched successfully',
+//         status: 'success',
+//         data,
+//       });
+//     } catch (error: any) {
+//       logger.error(
+//         `Error occurred while fetching team: ${JSON.stringify(error)}`
+//       );
+//       res.status(error.statusCode || 500).json({
+//         status: error.status || 'error',
+//         message: error.message,
+//       });
+//     }
+//   }
+// );
 
-export const updateTeam = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { id } = req.params;
+// export const updateTeam = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     try {
+//       const { id } = req.params;
 
-      const payload = {
-        ...req.body,
-      } as Omit<Team, 'updatedAt'>;
+//       const payload = {
+//         ...req.body,
+//       } as Omit<Team, 'updatedAt'>;
 
-      const data = await update(id, payload);
+//       const data = await update(id, payload);
 
-      res.status(200).json({
-        message: 'Team Updated successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while fetching team: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
-  }
-);
+//       res.status(200).json({
+//         message: 'Team Updated successfully',
+//         status: 'success',
+//         data,
+//       });
+//     } catch (error: any) {
+//       logger.error(
+//         `Error occurred while fetching team: ${JSON.stringify(error)}`
+//       );
+//       res.status(error.statusCode || 500).json({
+//         status: error.status || 'error',
+//         message: error.message,
+//       });
+//     }
+//   }
+// );

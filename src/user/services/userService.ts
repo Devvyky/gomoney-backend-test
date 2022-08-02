@@ -11,17 +11,65 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
   ];
   $and.push({ $or });
 
-  console.log($and);
-
   const criteria = [
     {
       $match: {
         $and,
       },
     },
-  ];
 
-  console.log(criteria);
+    {
+      $project: {
+        teams: {
+          name: 1,
+          shortName: 1,
+          email: 1,
+          status: 1,
+        },
+      },
+    },
+
+    {
+      $group: {
+        _id: 1,
+        teamIds: { $push: '$_id' },
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'fixtures',
+        let: { teamIds: '$teamIds' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [
+                  { $in: ['$home.team', '$$teamIds'] },
+                  { $in: ['$away.team', '$$teamIds'] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'fixtures',
+      },
+    },
+
+    {
+      $unwind: {
+        path: '$fixtures',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    // {
+    //   $project: {
+    //     teams: '$_id',
+    //     fixtures: '$fixtures',
+    //   },
+    // },
+  ];
 
   const teams = await TeamModel.aggregate(criteria);
 

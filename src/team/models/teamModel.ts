@@ -51,7 +51,7 @@ const teamSchema = new Schema(
 teamSchema.pre('save', function (next: HookNextFunction) {
   const team = this as Team;
 
-  if (team.isNew) return next();
+  if (!team.isNew) return next();
 
   team.updatedAt = moment().toDate();
 

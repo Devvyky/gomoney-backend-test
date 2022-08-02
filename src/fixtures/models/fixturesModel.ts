@@ -1,6 +1,6 @@
 import mongoose, { Schema, HookNextFunction } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
-import validator from 'validator';
+import { randomBytes } from 'crypto';
+import config from 'config';
 
 import { Fixture, FixtureStatues } from '../interfaces';
 import moment from 'moment';
@@ -19,7 +19,7 @@ const fixtureSchema = new Schema(
       },
     },
     away: {
-      team: {                                                                    
+      team: {
         type: Schema.Types.ObjectId,
         ref: 'Team',
         required: true,
@@ -31,11 +31,11 @@ const fixtureSchema = new Schema(
     },
     status: {
       type: String,
-      enum: {
-        values: FixtureStatues,
-        message: 'Team status is either completed, pending or ongoing',
-      },
+      enum: FixtureStatues,
       default: FixtureStatues.Pending,
+    },
+    link: {
+      type: String,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -56,12 +56,14 @@ const fixtureSchema = new Schema(
   }
 );
 
-fixtureSchema.pre('save', function (next: HookNextFunction) {
+fixtureSchema.pre('save', async function (next: HookNextFunction) {
   const fixture = this as Fixture;
 
-  if (fixture.isNew) return next();
+  if (!fixture.isNew) return next();
 
-  fixture.updatedAt = moment().toDate();
+  const url = config.get('baseUrl') as string;
+
+  fixture.link = `${url}/${randomBytes(16).toString('hex')}`;
 
   next();
 });

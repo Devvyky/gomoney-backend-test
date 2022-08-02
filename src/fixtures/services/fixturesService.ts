@@ -5,7 +5,7 @@ import AppError from '../../utils/appError';
 import { Fixture } from '../interfaces';
 import FixtureModel from '../models/fixturesModel';
 
-export const create = async (payload: Fixture): Promise<Fixture> => {
+export const createFixture = async (payload: Fixture): Promise<Fixture> => {
   logger.info(`Creating fixture with payload', ${JSON.stringify(payload)}`);
 
   return FixtureModel.create(payload);

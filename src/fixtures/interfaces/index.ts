@@ -1,16 +1,22 @@
 import { Document } from 'mongoose';
 
 export interface Fixture extends Document {
-  name: string;
-  shortName: string;
-  email: string;
+  home: {
+    team: string;
+    score?: number;
+  };
+  away: {
+    team: string;
+    score?: number;
+  };
+  link?: string;
   readonly createdBy: string;
   readonly createdAt?: Date;
   updatedAt?: Date;
 }
 
 export enum FixtureStatues {
-  Completed = 'Completed',
-  Pending = 'Pending',
-  Ongoing = 'Ongoing',
+  Completed = 'completed',
+  Pending = 'pending',
+  Ongoing = 'ongoing',
 }

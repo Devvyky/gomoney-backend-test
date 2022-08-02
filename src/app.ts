@@ -12,6 +12,7 @@ import logger from './logger';
 import connect from './database/connection';
 import userRouter from './routes/userRouter';
 import teamRouter from './routes/teamRouter';
+import fixtureRouter from './routes/fixtureRouter';
 import { errorHandler } from './middlewares/errorHandler';
 import AppError from './utils/appError';
 
@@ -49,6 +50,7 @@ app.use(
 // app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/team', teamRouter);
+app.use('/api/v1/fixture', fixtureRouter);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello world!');
