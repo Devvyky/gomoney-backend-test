@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
-import config from 'config';
+
+import { configuration } from '../../config/default';
 
 export const signToken = (id: string): string => {
-  const secret = config.get('jwt.secret') as string;
-  const expiresIn = config.get('jwt.expiresIn') as string;
+  const secret = configuration().jwt.secret;
+  const expiresIn = configuration().jwt.expiresIn;
   return jwt.sign({ id }, secret, {
     expiresIn: expiresIn,
   });

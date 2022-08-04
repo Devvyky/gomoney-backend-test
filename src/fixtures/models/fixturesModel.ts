@@ -1,9 +1,9 @@
 import mongoose, { Schema, HookNextFunction } from 'mongoose';
 import { randomBytes } from 'crypto';
-import config from 'config';
 
 import { Fixture, FixtureStatues } from '../interfaces';
 import moment from 'moment';
+import { configuration } from '../../../config/default';
 
 const fixtureSchema = new Schema(
   {
@@ -61,7 +61,7 @@ fixtureSchema.pre('save', async function (next: HookNextFunction) {
 
   if (!fixture.isNew) return next();
 
-  const url = config.get('baseUrl') as string;
+  const url = configuration().baseUrl;
 
   fixture.link = `${url}/${randomBytes(16).toString('hex')}`;
 

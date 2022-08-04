@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express, { Application, NextFunction, Request, Response } from 'express';
-import config from 'config';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -8,6 +7,7 @@ import morgan from 'morgan';
 import hpp from 'hpp';
 require('dotenv').config();
 
+import { configuration } from '../config/default';
 import logger from './logger';
 import connect from './database/connection';
 import userRouter from './routes/userRouter';
@@ -56,7 +56,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello world!');
 });
 
-const port = config.get('port') as number;
+const port = configuration().port;
 
 app.listen(port, () => {
   logger.info(`Server running on port ${port}!`);

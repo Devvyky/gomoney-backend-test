@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
-import config from 'config';
 
+import { configuration } from '../../config/default';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import UserModel from './../user/models/userModel';
@@ -29,7 +29,7 @@ export const protect = catchAsync(
     }
 
     // Verify signToken
-    const secret = config.get('jwt.secret') as string;
+    const secret = configuration().jwt.secret;
     const decoded: any = jwt.verify(token, secret);
 
     console.log(decoded);

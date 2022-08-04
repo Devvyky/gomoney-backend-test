@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import config from 'config';
 
+import { configuration } from '../../config/default';
 import logger from '../logger';
 
 const connect = async () => {
   try {
-    const dbUri = config.get('database.url') as string;
+    const dbUri = configuration().database.url;
     await mongoose
       .connect(dbUri, {
         useNewUrlParser: true,
