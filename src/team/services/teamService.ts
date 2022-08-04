@@ -12,7 +12,8 @@ export const create = async (payload: Team): Promise<Team> => {
 };
 
 export const find = async (): Promise<Team[]> => {
-  return TeamModel.find({ status: TeamStatues.Active });
+  // @ts-ignore
+  return TeamModel.find({ status: TeamStatues.Active }).cache();
 };
 
 export const findOne = async (id: string): Promise<Team> => {
