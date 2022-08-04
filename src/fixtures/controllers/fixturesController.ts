@@ -5,7 +5,7 @@ import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
 import { signToken } from '../../utils/signToken';
 import { Fixture } from '../interfaces';
-import { createFixture } from '../services/fixturesService';
+import { createFixture, findOne } from '../services/fixturesService';
 
 export const createFixtures = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -37,29 +37,29 @@ export const createFixtures = catchAsync(
   }
 );
 
-// export const findTeamById = catchAsync(
-//   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//     try {
-//       const { id } = req.params;
+export const findFixtureById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
 
-//       const data = await findOne(id);
+      const data = await findOne(id);
 
-//       res.status(200).json({
-//         message: 'Team fetched successfully',
-//         status: 'success',
-//         data,
-//       });
-//     } catch (error: any) {
-//       logger.error(
-//         `Error occurred while fetching team: ${JSON.stringify(error)}`
-//       );
-//       res.status(error.statusCode || 500).json({
-//         status: error.status || 'error',
-//         message: error.message,
-//       });
-//     }
-//   }
-// );
+      res.status(200).json({
+        message: 'Fixture fetched successfully',
+        status: 'success',
+        data,
+      });
+    } catch (error: any) {
+      logger.error(
+        `Error occurred while fetching fixtures: ${JSON.stringify(error)}`
+      );
+      res.status(error.statusCode || 500).json({
+        status: error.status || 'error',
+        message: error.message,
+      });
+    }
+  }
+);
 
 // export const updateTeam = catchAsync(
 //   async (req: Request, res: Response, next: NextFunction): Promise<void> => {

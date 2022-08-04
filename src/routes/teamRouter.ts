@@ -10,9 +10,15 @@ import {
 
 const router = express.Router();
 
-router.use(protect, restrictTo('admin'));
+router.use(protect);
 
-router.route('/').post(cleanCache, createTeam).get(findTeamAllTeams);
-router.route('/:id').get(findTeamById).patch(updateTeam);
+router
+  .route('/')
+  .post(restrictTo('admin'), cleanCache, createTeam)
+  .get(restrictTo('admin', 'user'), findTeamAllTeams);
+router
+  .route('/:id')
+  .get(restrictTo('admin', 'user'), findTeamById)
+  .patch(restrictTo('admin'), updateTeam);
 
 export default router;

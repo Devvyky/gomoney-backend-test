@@ -8,26 +8,15 @@ import { configuration } from '../../../config/default';
 const fixtureSchema = new Schema(
   {
     home: {
-      team: {
-        type: Schema.Types.ObjectId,
-        ref: 'Team',
-        required: true,
-      },
-      score: {
-        type: Number,
-        default: 0,
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'Team',
+      required: true,
     },
+
     away: {
-      team: {
-        type: Schema.Types.ObjectId,
-        ref: 'Team',
-        required: true,
-      },
-      score: {
-        type: Number,
-        default: 0,
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'Team',
+      required: true,
     },
     status: {
       type: String,
