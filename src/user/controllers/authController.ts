@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as _ from 'lodash';
+import { omit } from 'lodash';
+// import { omit } from 'lodash';
 
 import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
@@ -46,6 +48,12 @@ export const userLogin = catchAsync(
 
       const user = await login(payload);
 
+      const data = {
+        ...omit(user, 'passsword'),
+      };
+
+      console.log(data);
+
       // req.session.user = {
       //   user: user.id,
       //   valid: true,
@@ -58,7 +66,7 @@ export const userLogin = catchAsync(
         message: 'User login successful',
         status: 'success',
         token,
-        data: user,
+        data,
       });
     } catch (error: any) {
       logger.error(`Error logging: ${error}`);

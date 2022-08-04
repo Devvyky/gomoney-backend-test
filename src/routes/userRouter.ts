@@ -8,6 +8,6 @@ const router = express.Router();
 router.post('/signup', userSignup);
 router.post('/login', userLogin);
 
-router.get('/', searchTeams)
+router.get('/', searchTeams);
 
 export default router;
