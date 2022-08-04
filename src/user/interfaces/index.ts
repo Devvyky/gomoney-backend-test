@@ -14,3 +14,9 @@ export enum UserRoles {
   User = 'user',
   Admin = 'admin',
 }
+
+export interface UserSession {
+  user: string;
+  valid: boolean;
+  userAgent: string;
+}

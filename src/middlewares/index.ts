@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 
 import { configuration } from '../../config/default';
@@ -16,9 +15,11 @@ export const protect = catchAsync(
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
-
-    // else if (req.cookies.jwt) {
-    //   token = req.cookies.jwt;
+    // else if (!req.session) {
+    //   throw new AppError(
+    //     'You are not logged in! Please login to get access.',
+    //     401
+    //   );
     // }
 
     if (!token) {
@@ -32,7 +33,6 @@ export const protect = catchAsync(
     const secret = configuration().jwt.secret;
     const decoded: any = jwt.verify(token, secret);
 
-    console.log(decoded);
     // const decoded: any = await promisify(jwt.verify)(token, secret);
 
     // Check if user still exits
@@ -44,10 +44,9 @@ export const protect = catchAsync(
 
     // Grant access to protected routes
 
-    // Put user details in to the global request
+    // Put user details in to the global request object
     req.user = user;
 
-    console.log(req.user);
     next();
   }
 );

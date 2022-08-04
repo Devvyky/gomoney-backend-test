@@ -8,6 +8,9 @@ export interface Configuration {
     secret: string;
     expiresIn: string;
   };
+  cookie: {
+    secret: string;
+  };
   baseUrl: string;
 }
 
@@ -20,6 +23,9 @@ export const configuration = (): Configuration => ({
   jwt: {
     secret: process.env.JWT_SECRET as string,
     expiresIn: process.env.JWT_EXPIRES_IN as string,
+  },
+  cookie: {
+    secret: process.env.COOKIE_SECRET as string,
   },
   baseUrl: process.env.BASE_URL as string,
 });

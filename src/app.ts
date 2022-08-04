@@ -1,10 +1,13 @@
 import 'dotenv/config';
 import express, { Application, NextFunction, Request, Response } from 'express';
+import session from 'express-session';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import hpp from 'hpp';
+import Redis from 'ioredis';
+import connectRedis from 'connect-redis';
 require('dotenv').config();
 
 import { configuration } from '../config/default';
@@ -18,11 +21,17 @@ import AppError from './utils/appError';
 
 const app: Application = express();
 
+let RedisStore = connectRedis(session);
+const redisClient = new Redis();
+
+// if running behind a proxy
+// app.set('trust proxy', 1)
+
 // Set Security Headers
 app.use(helmet());
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (configuration().env === 'development') {
   app.use(morgan('dev'));
 }
 
@@ -36,6 +45,21 @@ app.use('/api', limiter);
 
 // Body Parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(
+  session({
+    secret: configuration().cookie.secret,
+    store: new RedisStore({ client: redisClient }),
+    name: 'sid',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: configuration().env === 'production' ? true : 'auto',
+      httpOnly: true,
+      // expires:
+      sameSite: configuration().env === 'production' ? 'none' : 'lax',
+    },
+  })
+);
 
 // Data Sanitization against NoSQL query injection
 app.use(mongoSanitize());
