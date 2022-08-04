@@ -36,6 +36,7 @@ if (configuration().env === 'development') {
   app.use(morgan('dev'));
 }
 
+// Limt requests from same IP to 500 per hour
 const limiter = rateLimit({
   max: 500,
   windowMs: 60 * 60 * 1000,
@@ -72,7 +73,6 @@ app.use(
   })
 );
 
-// app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/team', teamRouter);
 app.use('/api/v1/fixture', fixtureRouter);
@@ -83,9 +83,9 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 const port = configuration().port;
 
-app.listen(port, () => {
+app.listen(port, async () => {
   logger.info(`Server running on port ${port}!`);
-  connect();
+  await connect();
 });
 
 app.all('*', (req, res, next) => {
@@ -94,4 +94,4 @@ app.all('*', (req, res, next) => {
 
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
