@@ -46,11 +46,11 @@ export const userLogin = catchAsync(
 
       const user = await login(payload);
 
-      req.session.user = {
-        user: user.id,
-        valid: true,
-        userAgent: req.get('User-Agent') as string,
-      };
+      // req.session.user = {
+      //   user: user.id,
+      //   valid: true,
+      //   userAgent: req.get('User-Agent') as string,
+      // };
 
       const token = signToken(user?._id);
 

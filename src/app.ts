@@ -18,6 +18,7 @@ import teamRouter from './routes/teamRouter';
 import fixtureRouter from './routes/fixtureRouter';
 import { errorHandler } from './middlewares/errorHandler';
 import AppError from './utils/appError';
+require('./cache/cacheService');
 
 const app: Application = express();
 

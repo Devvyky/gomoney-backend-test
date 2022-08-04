@@ -12,6 +12,9 @@ export interface Configuration {
     secret: string;
   };
   baseUrl: string;
+  redis: {
+    url: string;
+  };
 }
 
 export const configuration = (): Configuration => ({
@@ -26,6 +29,9 @@ export const configuration = (): Configuration => ({
   },
   cookie: {
     secret: process.env.COOKIE_SECRET as string,
+  },
+  redis: {
+    url: process.env.REDIS_URL as string,
   },
   baseUrl: process.env.BASE_URL as string,
 });

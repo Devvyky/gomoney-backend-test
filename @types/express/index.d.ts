@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import session from 'express-session';
+import mongoose from 'mongoose';
 
 import { User, UserSession } from '../../src/user/interfaces';
 
@@ -14,6 +15,21 @@ declare global {
 declare module 'express-session' {
   export interface SessionData {
     user: UserSession;
+  }
+}
+
+declare module 'mongoose' {
+  interface DocumentQuery<
+    T,
+    DocType extends import('mongoose').Document,
+    QueryHelpers = {}
+  > {
+    mongooseCollection: {
+      name: any;
+    };
+    cache(): DocumentQuery<T[], Document> & QueryHelpers;
+    useCache: boolean;
+    hashKey: string;
   }
 }
 
