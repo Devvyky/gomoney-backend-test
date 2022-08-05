@@ -15,7 +15,7 @@ export const createFixture = async (payload: Fixture): Promise<Fixture> => {
 export const findOne = async (id: string): Promise<Fixture> => {
   logger.info(`finding fixture with ID ${id}`);
 
-  const fixture = (await FixtureModel.findById(id)
+  const fixture = await FixtureModel.findById(id)
     .populate({
       path: 'createdBy',
       select: 'name role',
@@ -27,7 +27,7 @@ export const findOne = async (id: string): Promise<Fixture> => {
     .populate({
       path: 'away',
       select: 'name shortName',
-    })) as Fixture;
+    });
 
   if (!fixture) {
     throw new AppError('No fixture found with that ID', 400);

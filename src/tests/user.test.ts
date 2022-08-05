@@ -18,9 +18,8 @@ const userInput = {
   password: '123456',
 };
 
+let server: any;
 describe('User Test', () => {
-  // user registration
-
   describe('user registration', () => {
     describe('given the email and password are valid', () => {
       it('should return a status code of 201 with message', async () => {
@@ -35,7 +34,7 @@ describe('User Test', () => {
 
         expect(statusCode).toBe(201);
         expect(body.message).toEqual('User signup successful');
-        // expect(createUserServiceMock).toHaveBeenCalledWith(userInput);
+        expect(createUserServiceMock).toHaveBeenCalledWith(userInput);
       });
     });
 
@@ -50,8 +49,7 @@ describe('User Test', () => {
           '/api/v1/user/signup'
         );
 
-        expect(statusCode).toBe(201);
-        // expect(body.message).toEqual('User signup successful');
+        expect(statusCode).not.toBe(201);
       });
     });
   });
