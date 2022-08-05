@@ -12,7 +12,6 @@ const fixtureSchema = new Schema(
       ref: 'Team',
       required: true,
     },
-
     away: {
       type: Schema.Types.ObjectId,
       ref: 'Team',
@@ -25,6 +24,10 @@ const fixtureSchema = new Schema(
     },
     link: {
       type: String,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     createdBy: {
       type: Schema.Types.ObjectId,

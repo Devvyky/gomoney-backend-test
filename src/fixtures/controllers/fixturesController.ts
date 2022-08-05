@@ -4,8 +4,8 @@ import { clone } from 'lodash';
 import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
 import { signToken } from '../../utils/signToken';
-import { Fixture } from '../interfaces';
-import { createFixture, findOne } from '../services/fixturesService';
+import { Fixture, FixtureStatues } from '../interfaces';
+import { createFixture, find, findOne } from '../services/fixturesService';
 
 export const createFixtures = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -46,6 +46,30 @@ export const findFixtureById = catchAsync(
 
       res.status(200).json({
         message: 'Fixture fetched successfully',
+        status: 'success',
+        data,
+      });
+    } catch (error: any) {
+      logger.error(
+        `Error occurred while fetching fixtures: ${JSON.stringify(error)}`
+      );
+      res.status(error.statusCode || 500).json({
+        status: error.status || 'error',
+        message: error.message,
+      });
+    }
+  }
+);
+
+export const findFixtures = catchAsync(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { status } = req.query;
+
+      const data = await find(status as FixtureStatues);
+
+      res.status(200).json({
+        message: 'Fixtures fetched successfully',
         status: 'success',
         data,
       });

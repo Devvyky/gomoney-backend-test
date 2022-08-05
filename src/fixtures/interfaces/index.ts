@@ -4,6 +4,7 @@ export interface Fixture extends Document {
   home: string;
   away: number;
   link?: string;
+  isDeleted?: false;
   readonly createdBy: string;
   readonly createdAt?: Date;
   updatedAt?: Date;
