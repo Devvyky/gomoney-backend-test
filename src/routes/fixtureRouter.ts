@@ -3,6 +3,7 @@ import {
   createFixtures,
   findFixtureById,
   findFixtures,
+  removeFixture,
   updateFixture,
 } from '../fixtures/controllers/fixturesController';
 import { protect, restrictTo } from '../middlewares';
@@ -18,6 +19,7 @@ router
 router
   .route('/:id')
   .get(restrictTo('admin', 'user'), findFixtureById)
-  .patch(restrictTo('admin'), updateFixture);
+  .patch(restrictTo('admin'), updateFixture)
+  .delete(restrictTo('admin'), removeFixture);
 
 export default router;

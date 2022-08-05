@@ -29,13 +29,14 @@ export const createTeam = catchAsync(
   }
 );
 
-export const findTeamAllTeams = catchAsync(
+export const findAllTeams = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const data = await find();
 
     res.status(200).json({
       message: 'Teams fetched successfully',
       status: 'success',
+      results: data.length,
       data,
     });
   }

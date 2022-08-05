@@ -55,6 +55,7 @@ export const findFixtures = catchAsync(
     res.status(200).json({
       message: 'Fixtures fetched successfully',
       status: 'success',
+      results: data.length,
       data,
     });
   }

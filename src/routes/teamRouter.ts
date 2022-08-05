@@ -3,7 +3,7 @@ import { cleanCache, protect, restrictTo } from '../middlewares';
 
 import {
   createTeam,
-  findTeamAllTeams,
+  findAllTeams,
   findTeamById,
   removeTeam,
   updateTeam,
@@ -16,7 +16,7 @@ router.use(protect);
 router
   .route('/')
   .post(restrictTo('admin'), cleanCache, createTeam)
-  .get(restrictTo('admin', 'user'), findTeamAllTeams);
+  .get(restrictTo('admin', 'user'), findAllTeams);
 router
   .route('/:id')
   .get(restrictTo('admin', 'user'), findTeamById)
