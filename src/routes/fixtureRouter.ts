@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 import {
   createFixtures,
   findFixtureById,
+  findFixtures,
+  updateFixture,
 } from '../fixtures/controllers/fixturesController';
 import { protect, restrictTo } from '../middlewares';
 
@@ -12,8 +14,10 @@ router.use(protect);
 router
   .route('/')
   .post(restrictTo('admin'), createFixtures)
-  .get(restrictTo('admin', 'user'), findFixtureById);
-// .get(findTeamAllTeams);
-// router.route('/:id').get(findTeamById).patch(updateTeam);
+  .get(restrictTo('admin', 'user'), findFixtures);
+router
+  .route('/:id')
+  .get(restrictTo('admin', 'user'), findFixtureById)
+  .patch(restrictTo('admin'), updateFixture);
 
 export default router;

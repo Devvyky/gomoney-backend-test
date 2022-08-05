@@ -5,6 +5,7 @@ import {
   createTeam,
   findTeamAllTeams,
   findTeamById,
+  removeTeam,
   updateTeam,
 } from '../team/controllers/teamController';
 
@@ -19,6 +20,7 @@ router
 router
   .route('/:id')
   .get(restrictTo('admin', 'user'), findTeamById)
-  .patch(restrictTo('admin'), updateTeam);
+  .patch(restrictTo('admin'), cleanCache, updateTeam)
+  .delete(restrictTo('admin'), cleanCache, removeTeam);
 
 export default router;

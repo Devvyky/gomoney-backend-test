@@ -16,6 +16,7 @@ const userSchema = new Schema({
     unique: true,
     trim: true,
     validate: [validator.isEmail, 'Please provide a valid email'],
+    lowercase: true,
   },
   password: {
     type: String,
@@ -35,6 +36,9 @@ const userSchema = new Schema({
     type: Date,
   },
 });
+
+// index certain fields for faster queries
+userSchema.index({ email: 1 });
 
 // INSTANCE METHOD TO HASH PASSWORD DURING USER SIGNUP
 userSchema.pre('save', async function (next: HookNextFunction) {

@@ -23,11 +23,16 @@ const teamSchema = new Schema(
       unique: true,
       trim: true,
       validate: [validator.isEmail, 'Please provide a valid email'],
+      lowercase: true,
     },
     status: {
       type: String,
       enum: TeamStatues,
       default: TeamStatues.Active,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -41,6 +46,9 @@ const teamSchema = new Schema(
     updatedAt: {
       type: Date,
     },
+    deletedAt: {
+      type: Date,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -48,10 +56,13 @@ const teamSchema = new Schema(
   }
 );
 
+// index certain fields for faster queries
+teamSchema.index({ name: 1, shortName: 1, isDeleted: 1, _id: 1 });
+
 teamSchema.pre('save', function (next: HookNextFunction) {
   const team = this as Team;
 
-  if (!team.isNew) return next();
+  if (team.isNew) return next();
 
   team.updatedAt = moment().toDate();
 

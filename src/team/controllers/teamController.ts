@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { clone } from 'lodash';
+import moment from 'moment';
 
 import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
 import { signToken } from '../../utils/signToken';
-import { Team } from '../interfaces';
-import { create, find, findOne, update } from '../services/teamService';
+import { Team, TeamStatues } from '../interfaces';
+import { create, find, findOne, remove, update } from '../services/teamService';
 
 export const createTeam = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -88,10 +89,14 @@ export const updateTeam = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      const { name, shortName, email }: Team = req.body;
+      const payload: Partial<Team> = {
+        name,
+        shortName,
+        email,
+      };
 
-      const payload = {
-        ...req.body,
-      } as Omit<Team, 'updatedAt'>;
+      console.log(payload);
 
       const data = await update(id, payload);
 
@@ -103,6 +108,35 @@ export const updateTeam = catchAsync(
     } catch (error: any) {
       logger.error(
         `Error occurred while fetching team: ${JSON.stringify(error)}`
+      );
+      res.status(error.statusCode || 500).json({
+        status: error.status || 'error',
+        message: error.message,
+      });
+    }
+  }
+);
+
+export const removeTeam = catchAsync(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      const payload: Partial<Team> = {
+        isDeleted: true,
+        status: TeamStatues.Inactive,
+        deletedAt: moment().toDate(),
+      };
+
+      await remove(id, payload);
+
+      res.status(204).json({
+        message: 'Team Removed successfully',
+        status: 'success',
+      });
+    } catch (error: any) {
+      logger.error(
+        `Error occurred while removing team: ${JSON.stringify(error)}`
       );
       res.status(error.statusCode || 500).json({
         status: error.status || 'error',
