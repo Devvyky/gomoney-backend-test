@@ -45,7 +45,6 @@ export const protect = catchAsync(
 
 export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    // try {
     // roles ['admin', 'user']
 
     if (!roles.includes(req.user.role as string)) {
@@ -57,13 +56,6 @@ export const restrictTo = (...roles: string[]) => {
 
     // Access granted
     next();
-    // } catch (error: any) {
-    //   logger.error(`Forbidden acess: ${JSON.stringify(error)}`);
-    //   res.status(error.statusCode || 500).json({
-    //     status: error.status || 'error',
-    //     message: error.message,
-    //   });
-    // }
   };
 };
 
