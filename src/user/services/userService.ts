@@ -2,7 +2,7 @@ import { Team, TeamStatues } from '../../team/interfaces';
 import TeamModel from '../../team/models/teamModel';
 
 export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
-  const $and: any = [{ status: TeamStatues.Active }];
+  const $and: any = [{ status: TeamStatues.Active, isDeleted: false }];
 
   const $or = [
     { name: { $regex: emailOrNameContains, $options: 'i' } },
@@ -11,7 +11,10 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
   ];
   $and.push({ $or });
 
-  const criteria = [
+  const criteria = { $and };
+  const teams = await TeamModel.find(criteria);
+
+  const pipeline = [
     {
       $match: {
         $and,
@@ -19,19 +22,9 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
     },
 
     {
-      $project: {
-        teams: {
-          name: 1,
-          shortName: 1,
-          email: 1,
-          status: 1,
-        },
-      },
-    },
-
-    {
       $group: {
-        _id: 1,
+        _id: null,
+        // teams: { $first: '$name' },
         teamIds: { $push: '$_id' },
       },
     },
@@ -45,33 +38,67 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
             $match: {
               $expr: {
                 $or: [
-                  { $in: ['$home.team', '$$teamIds'] },
-                  { $in: ['$away.team', '$$teamIds'] },
+                  { $in: ['$home', '$$teamIds'] },
+                  { $in: ['$away', '$$teamIds'] },
                 ],
               },
             },
           },
+          {
+            $lookup: {
+              from: 'teams',
+              localField: 'home',
+              foreignField: '_id',
+              as: 'home',
+            },
+          },
+          {
+            $lookup: {
+              from: 'teams',
+              localField: 'away',
+              foreignField: '_id',
+              as: 'away',
+            },
+          },
+
+          {
+            $unwind: {
+              path: '$home',
+            },
+          },
+          {
+            $unwind: {
+              path: '$away',
+            },
+          },
         ],
-        as: 'fixtures',
+        as: 'teamfixtures',
       },
     },
 
     {
       $unwind: {
-        path: '$fixtures',
+        path: '$teamfixtures',
         preserveNullAndEmptyArrays: true,
       },
     },
 
-    // {
-    //   $project: {
-    //     teams: '$_id',
-    //     fixtures: '$fixtures',
-    //   },
-    // },
+    {
+      $group: {
+        _id: null,
+        fixtures: { $push: '$teamfixtures' },
+      },
+    },
+
+    {
+      $project: {
+        _id: 0,
+        fixtures: 1,
+      },
+    },
   ];
 
-  const teams = await TeamModel.aggregate(criteria);
+  const result = await TeamModel.aggregate(pipeline);
 
-  return teams;
+  return { teams, fixtures: result[0].fixtures };
 };
