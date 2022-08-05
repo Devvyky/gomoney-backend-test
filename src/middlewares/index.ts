@@ -10,56 +10,43 @@ import UserModel from './../user/models/userModel';
 
 export const protect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      let token;
-      if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith('Bearer')
-      ) {
-        token = req.headers.authorization.split(' ')[1];
-      }
-      // else if (!req.session) {
-      //   throw new AppError(
-      //     'You are not logged in! Please login to get access.',
-      //     401
-      //   );
-      // }
-
-      if (!token) {
-        throw new AppError(
-          'You are not logged in! Please login to get access.',
-          401
-        );
-      }
-
-      // Verify signToken
-      const secret = configuration().jwt.secret;
-      const decoded: any = jwt.verify(token, secret);
-
-      // const decoded: any = await promisify(jwt.verify)(token, secret);
-
-      // Check if user still exits
-      const user = await UserModel.findById(decoded.id);
-
-      if (!user) {
-        throw new AppError(
-          'The user that has this token no longer exist.',
-          401
-        );
-      }
-
-      // Grant access to protected routes
-      // Put user details in to the global request object
-      req.user = user;
-
-      next();
-    } catch (error: any) {
-      logger.error(`Authorization Error: ${JSON.stringify(error)}`);
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
     }
+    // else if (!req.session) {
+    //   throw new AppError(
+    //     'You are not logged in! Please login to get access.',
+    //     401
+    //   );
+    // }
+
+    if (!token) {
+      throw new AppError(
+        'You are not logged in! Please login to get access.',
+        401
+      );
+    }
+
+    // Verify signToken
+    const secret = configuration().jwt.secret;
+    const decoded: any = jwt.verify(token, secret);
+
+    // const decoded: any = await promisify(jwt.verify)(token, secret);
+
+    // Check if user still exits
+    const user = await UserModel.findById(decoded.id);
+
+    if (!user) {
+      throw new AppError('The user that has this token no longer exist.', 401);
+    }
+
+    // Grant access to protected routes
+    // Put user details in to the global request object
+    req.user = user;
   }
 );
 
