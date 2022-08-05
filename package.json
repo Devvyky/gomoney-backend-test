@@ -7,7 +7,7 @@
     "start": "npm run build && node dist/src/app.js",
     "dev": "NODE_ENV=development nodemon src/app.ts",
     "build": "rimraf ./dist && tsc -p .",
-    "test": "jest --watch"
+    "test": "jest --watchAll"
   },
   "author": "",
   "license": "ISC",

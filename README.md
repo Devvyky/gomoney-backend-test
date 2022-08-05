@@ -1,8 +1,6 @@
-
 # League API
 
-A small project that allow admins to creat teams, fixtures, etc
-
+A small project that allow admins to create teams, fixtures, etc
 
 ## Run Locally
 
@@ -30,7 +28,6 @@ Start the server
   npm run start
 ```
 
-
 ## Environment Variables
 
 Create a `.env` file and replace the contents of `example.env` inside your `.env` file
@@ -43,3 +40,6 @@ To run tests, run the following command
   npm run test
 ```
 
+## Documentation
+
+[Documentation](https://documenter.getpostman.com/view/9742220/VUjLLSoa)

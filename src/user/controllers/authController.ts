@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import * as _ from 'lodash';
 import { omit } from 'lodash';
-import { configuration } from '../../../config/default';
 
 import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
@@ -12,7 +10,10 @@ import { login, signup } from '../services/authService';
 export const userSignup = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { name, email, password }: User = req.body;
-    const isAdmin: boolean = _.isBoolean(req.query.admin);
+    const { admin } = req.query;
+
+    const isAdmin = (admin as string).toLowerCase() === 'false' ? false : true;
+
     const payload = {
       name,
       email,
@@ -22,7 +23,7 @@ export const userSignup = catchAsync(
     await signup(payload, isAdmin);
 
     res.status(201).json({
-      message: 'User signup successful',
+      message: isAdmin ? 'Admin signup successful' : 'User signup successful',
       status: 'success',
     });
   }

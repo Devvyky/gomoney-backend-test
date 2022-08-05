@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 
-import app from '../src/app';
-import * as authService from '../src/user/services/authService';
+import app from '../app';
+import * as authService from '../user/services/authService';
 
 const userId = new mongoose.Types.ObjectId().toString();
 const userPayload = {
@@ -58,5 +58,5 @@ describe('User Test', () => {
   // the email and password gets validation
   // verify that the handler handles any errors
 
-  // Create a user session
+  // login user
 });
