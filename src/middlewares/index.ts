@@ -17,12 +17,6 @@ export const protect = catchAsync(
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
-    // else if (!req.session) {
-    //   throw new AppError(
-    //     'You are not logged in! Please login to get access.',
-    //     401
-    //   );
-    // }
 
     if (!token) {
       throw new AppError(
@@ -34,8 +28,6 @@ export const protect = catchAsync(
     // Verify signToken
     const secret = configuration().jwt.secret;
     const decoded: any = jwt.verify(token, secret);
-
-    // const decoded: any = await promisify(jwt.verify)(token, secret);
 
     // Check if user still exits
     const user = await UserModel.findById(decoded.id);
@@ -55,7 +47,7 @@ export const restrictTo = (...roles: string[]) => {
     try {
       // roles ['admin', 'user']
 
-      if (!roles.includes(req.user?.role as string)) {
+      if (!roles.includes(req.user.role as string)) {
         throw new AppError(
           'You do not have permission to perform this action',
           403
