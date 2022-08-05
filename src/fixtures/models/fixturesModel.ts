@@ -41,12 +41,18 @@ const fixtureSchema = new Schema(
     updatedAt: {
       type: Date,
     },
+    deletedAt: {
+      type: Date,
+    },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
+// index certain fields for faster queries
+fixtureSchema.index({ status: 1, isDeleted: 1, _id: 1 });
 
 fixtureSchema.pre('save', async function (next: HookNextFunction) {
   const fixture = this as Fixture;
@@ -60,6 +66,6 @@ fixtureSchema.pre('save', async function (next: HookNextFunction) {
   next();
 });
 
-const Team = mongoose.model<Fixture>('Fixture', fixtureSchema);
+const Fixture = mongoose.model<Fixture>('Fixture', fixtureSchema);
 
-export default Team;
+export default Fixture;

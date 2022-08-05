@@ -56,6 +56,9 @@ const teamSchema = new Schema(
   }
 );
 
+// index certain fields for faster queries
+teamSchema.index({ name: 1, shortName: 1, isDeleted: 1, _id: 1 });
+
 teamSchema.pre('save', function (next: HookNextFunction) {
   const team = this as Team;
 

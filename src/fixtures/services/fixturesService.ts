@@ -36,19 +36,18 @@ export const findOne = async (id: string): Promise<Fixture> => {
   return fixture;
 };
 
-export const update = async (
-  id: string,
-  payload: Fixture
-): Promise<Fixture> => {
+export const update = async (id: string, status: string): Promise<Fixture> => {
   logger.info(
-    `attempting to update team with ID: ${id} with paylod: ${JSON.stringify(
-      payload
-    )}`
+    `attempting to update team with ID: ${id} with status: ${status}`
   );
 
-  const fixture = (await FixtureModel.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  })) as Fixture;
+  const fixture = (await FixtureModel.findOneAndUpdate(
+    { _id: id, isDeleted: false },
+    { status },
+    {
+      new: true,
+    }
+  )) as Fixture;
 
   if (!fixture) {
     throw new AppError('No fixture found with that ID', 400);
@@ -87,4 +86,25 @@ export const find = async (status: FixtureStatues): Promise<Fixture[]> => {
   }
 
   return fixture;
+};
+
+export const remove = async (
+  id: string,
+  payload: Partial<Fixture>
+): Promise<void> => {
+  logger.info(
+    `attempting to remove fixture with ID: ${id} with paylod: ${JSON.stringify(
+      payload
+    )}`
+  );
+
+  const team = await FixtureModel.findOne({ id, isDeleted: false });
+
+  if (!team) {
+    throw new AppError('No fixture found with that ID or already deleted', 404);
+  }
+
+  await FixtureModel.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
 };

@@ -31,7 +31,10 @@ export const findOne = async (id: string): Promise<Team> => {
   return team;
 };
 
-export const update = async (id: string, payload: Team): Promise<Team> => {
+export const update = async (
+  id: string,
+  payload: Partial<Team>
+): Promise<Team> => {
   logger.info(
     `attempting to update team with ID: ${id} with paylod: ${JSON.stringify(
       payload
@@ -53,13 +56,15 @@ export const update = async (id: string, payload: Team): Promise<Team> => {
   return team;
 };
 
-export const remove = async (id: string, payload: Team): Promise<void> => {
+export const remove = async (
+  id: string,
+  payload: Partial<Team>
+): Promise<void> => {
   logger.info(
     `attempting to remove team with ID: ${id} with paylod: ${JSON.stringify(
       payload
     )}`
   );
-
   const team = await TeamModel.findOne({ id, status: TeamStatues.Active });
 
   if (!team) {

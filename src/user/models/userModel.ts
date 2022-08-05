@@ -37,6 +37,9 @@ const userSchema = new Schema({
   },
 });
 
+// index certain fields for faster queries
+userSchema.index({ email: 1 });
+
 // INSTANCE METHOD TO HASH PASSWORD DURING USER SIGNUP
 userSchema.pre('save', async function (next: HookNextFunction) {
   const user = this as User;

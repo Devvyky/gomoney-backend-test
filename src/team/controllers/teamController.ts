@@ -89,10 +89,14 @@ export const updateTeam = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      const { name, shortName, email }: Team = req.body;
+      const payload: Partial<Team> = {
+        name,
+        shortName,
+        email,
+      };
 
-      const payload = {
-        ...req.body,
-      } as Omit<Team, 'updatedAt'>;
+      console.log(payload);
 
       const data = await update(id, payload);
 
@@ -118,11 +122,11 @@ export const removeTeam = catchAsync(
     try {
       const { id } = req.params;
 
-      const payload = {
+      const payload: Partial<Team> = {
         isDeleted: true,
         status: TeamStatues.Inactive,
         deletedAt: moment().toDate(),
-      } as Omit<Team, 'updatedAt'>;
+      };
 
       await remove(id, payload);
 
