@@ -1,7 +1,10 @@
+import { Fixture } from '../../fixtures/interfaces';
 import { Team, TeamStatues } from '../../team/interfaces';
 import TeamModel from '../../team/models/teamModel';
 
-export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
+export const searchTeam = async (
+  emailOrNameContains: string
+): Promise<{ teams: Team[]; fixtures: Fixture[] }> => {
   const $and: any = [{ status: TeamStatues.Active, isDeleted: false }];
 
   const $or = [
@@ -24,7 +27,6 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
     {
       $group: {
         _id: null,
-        // teams: { $first: '$name' },
         teamIds: { $push: '$_id' },
       },
     },
@@ -100,5 +102,5 @@ export const searchTeam = async (emailOrNameContains: string): Promise<any> => {
 
   const result = await TeamModel.aggregate(pipeline);
 
-  return { teams, fixtures: result[0].fixtures };
+  return { teams, fixtures: result[0].fixtures as Fixture[] };
 };

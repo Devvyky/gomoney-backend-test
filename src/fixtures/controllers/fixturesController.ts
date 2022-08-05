@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { clone } from 'lodash';
 import moment from 'moment';
 
-import logger from '../../logger';
 import catchAsync from '../../utils/catchAsync';
-import { signToken } from '../../utils/signToken';
 import { Fixture, FixtureStatues } from '../interfaces';
 import {
   createFixture,
@@ -21,7 +19,7 @@ export const createFixtures = catchAsync(
     const payload = {
       home,
       away,
-      createdBy: user?.id,
+      createdBy: user.id,
     } as Fixture;
 
     const data = await createFixture(payload);

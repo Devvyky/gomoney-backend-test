@@ -12,7 +12,11 @@ export const userSignup = catchAsync(
     const { name, email, password }: User = req.body;
     const { admin } = req.query;
 
-    const isAdmin = (admin as string).toLowerCase() === 'false' ? false : true;
+    let isAdmin = false;
+
+    if (admin) {
+      isAdmin = (admin as string)?.toLowerCase() === 'false' ? false : true;
+    }
 
     const payload = {
       name,
