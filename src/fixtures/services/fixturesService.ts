@@ -98,7 +98,7 @@ export const remove = async (
     )}`
   );
 
-  const team = await FixtureModel.findOne({ id, isDeleted: false });
+  const team = await FixtureModel.findOne({ _id: id, isDeleted: false });
 
   if (!team) {
     throw new AppError('No fixture found with that ID or already deleted', 404);
