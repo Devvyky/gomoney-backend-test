@@ -25,9 +25,6 @@ const app: Application = express();
 let RedisStore = connectRedis(session);
 const redisClient = new Redis(configuration().redis.url);
 
-// if running behind a proxy
-// app.set('trust proxy', 1)
-
 // Set Security Headers
 app.use(helmet());
 
@@ -55,10 +52,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: configuration().env === 'production' ? true : 'auto',
+      secure: configuration().env === 'staging' ? true : 'auto',
       httpOnly: true,
-      // expires:
-      sameSite: configuration().env === 'production' ? 'none' : 'lax',
+      sameSite: configuration().env === 'staging' ? 'none' : 'lax',
     },
   })
 );
@@ -89,7 +85,6 @@ app.listen(port, async () => {
 });
 
 app.all('*', (req, res, next) => {
-  configuration().env;
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
