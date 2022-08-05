@@ -5,11 +5,7 @@ services:
     build:
       context: .
       target: production
-    # image: registry.heroku.com/safe-badlands-10026/web
-    # volumes:
-    #   - ./:/usr/src/app
-    #   - /usr/src/app/node_modules
+    image: registry.heroku.com/infinite-woodland-13248/web
     env_file: .env
     ports:
       - 3000:3000
-    # command: npm run dev

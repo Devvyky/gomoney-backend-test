@@ -5,7 +5,7 @@ services:
     build:
       context: .
       target: build
-    # image: league-api
+    image: league-api
     ports:
       - 3000:3000
     env_file: .env

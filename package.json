@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=production&& npm run build && node dist/src/app.js",
-    "dev": "set NODE_ENV=development&& nodemon src/app.ts",
+    "start": "npm run build && node dist/src/app.js",
+    "dev": "NODE_ENV=development nodemon src/app.ts",
     "build": "rimraf ./dist && tsc -p .",
     "test": "jest --watch"
   },

@@ -16,130 +16,80 @@ import {
 
 export const createFixtures = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { home, away }: Fixture = req.body;
-      const user = clone(req.user);
-      const payload = {
-        home,
-        away,
-        createdBy: user?.id,
-      } as Fixture;
+    const { home, away }: Fixture = req.body;
+    const user = clone(req.user);
+    const payload = {
+      home,
+      away,
+      createdBy: user?.id,
+    } as Fixture;
 
-      const data = await createFixture(payload);
+    const data = await createFixture(payload);
 
-      res.status(201).json({
-        message: 'Fixtures created successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while creating fixtures: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(201).json({
+      message: 'Fixtures created successfully',
+      status: 'success',
+      data,
+    });
   }
 );
 
 export const findFixtureById = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      const data = await findOne(id);
+    const data = await findOne(id);
 
-      res.status(200).json({
-        message: 'Fixture fetched successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while fetching fixtures: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(200).json({
+      message: 'Fixture fetched successfully',
+      status: 'success',
+      data,
+    });
   }
 );
 
 export const findFixtures = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { status } = req.query;
+    const { status } = req.query;
 
-      const data = await find(status as FixtureStatues);
+    const data = await find(status as FixtureStatues);
 
-      res.status(200).json({
-        message: 'Fixtures fetched successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while fetching fixtures: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(200).json({
+      message: 'Fixtures fetched successfully',
+      status: 'success',
+      data,
+    });
   }
 );
 
 export const updateFixture = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { id } = req.params;
-      const { status } = req.body;
+    const { id } = req.params;
+    const { status } = req.body;
 
-      const data = await update(id, status);
+    const data = await update(id, status);
 
-      res.status(200).json({
-        message: 'Fixture updated successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while updating fixture: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(200).json({
+      message: 'Fixture updated successfully',
+      status: 'success',
+      data,
+    });
   }
 );
 
 export const removeFixture = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      const payload: Partial<Fixture> = {
-        isDeleted: true,
-        deletedAt: moment().toDate(),
-      };
-      await remove(id, payload);
+    const payload: Partial<Fixture> = {
+      isDeleted: true,
+      deletedAt: moment().toDate(),
+    };
+    await remove(id, payload);
 
-      res.status(204).json({
-        message: 'Fixture removed successfully',
-        status: 'success',
-      });
-    } catch (error: any) {
-      logger.error(
-        `Error occurred while removing fixture: ${JSON.stringify(error)}`
-      );
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(204).json({
+      message: 'Fixture removed successfully',
+      status: 'success',
+    });
   }
 );

@@ -7,22 +7,14 @@ import { searchTeam } from '../services/userService';
 
 export const searchTeams = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { search } = req.query;
+    const { search } = req.query;
 
-      const data = await searchTeam(search as string);
+    const data = await searchTeam(search as string);
 
-      res.status(200).json({
-        message: 'Teams or fixtures fetched successfully',
-        status: 'success',
-        data,
-      });
-    } catch (error: any) {
-      logger.error(`Error logging: ${error}`);
-      res.status(error.statusCode || 500).json({
-        status: error.status || 'error',
-        message: error.message,
-      });
-    }
+    res.status(200).json({
+      message: 'Teams or fixtures fetched successfully',
+      status: 'success',
+      data,
+    });
   }
 );

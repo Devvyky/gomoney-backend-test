@@ -23,7 +23,7 @@ require('./cache/cacheService');
 const app: Application = express();
 
 let RedisStore = connectRedis(session);
-const redisClient = new Redis();
+const redisClient = new Redis(configuration().redis.url);
 
 // if running behind a proxy
 // app.set('trust proxy', 1)
@@ -78,7 +78,7 @@ app.use('/api/v1/team', teamRouter);
 app.use('/api/v1/fixture', fixtureRouter);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.send('Hello world!');
+  res.send('League API!');
 });
 
 const port = configuration().port;
@@ -89,6 +89,7 @@ app.listen(port, async () => {
 });
 
 app.all('*', (req, res, next) => {
+  configuration().env;
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 

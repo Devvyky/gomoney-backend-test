@@ -5,8 +5,9 @@ import mongoose from 'mongoose';
 import { promisify } from 'util';
 
 import logger from '../logger';
+import { configuration } from '../../config/default';
 
-const client = new Redis();
+const client = new Redis(configuration().redis.url);
 client.hget = promisify(client.hget) as any;
 
 const exec = mongoose.Query.prototype.exec;
@@ -39,10 +40,9 @@ mongoose.Query.prototype.exec = async function () {
   // Check if we have a value for 'key' in redis
   const cacheValue = await client.hget(this.hashKey, key);
 
-  // // If we do, serve datat from cache instead of running the query
+  // // If we do, serve data from cache instead of running the query
   if (cacheValue) {
-    console.log('Serving from cache');
-
+    logger.info('Serving from cache');
     const doc = JSON.parse(cacheValue);
 
     return Array.isArray(doc)
