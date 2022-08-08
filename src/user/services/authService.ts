@@ -8,7 +8,7 @@ export const signup = async (
   payload: User,
   isAdmin?: boolean
 ): Promise<User> => {
-  logger.info(`User signup with payload', ${JSON.stringify(payload)}`);
+  logger.info(`User signup with email: ${JSON.stringify(payload.email)}`);
   const role = isAdmin ? 'admin' : 'user';
 
   if (role) {
@@ -18,13 +18,14 @@ export const signup = async (
   const user = await UserModel.create(payload);
 
   return user;
-  // return omit(user, 'password');
 };
 
 export const login = async (payload: {
   email: string;
   password: string;
 }): Promise<User> => {
+  logger.info(`User login with email: ${JSON.stringify(payload.email)}`);
+
   const { email, password } = payload;
 
   if (!email || !password) {
